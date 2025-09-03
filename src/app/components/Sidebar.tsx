@@ -15,6 +15,8 @@ import { Home, Inbox, Add, Assignment, Person } from "@mui/icons-material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
+import ChangeRequestModal from "./ChangeRequestModal";
+import { useRouter } from "next/navigation";
 
 // ✅ TypeScript Learning: Interface for menu items
 interface MenuItem {
@@ -26,12 +28,31 @@ interface MenuItem {
 
 const Sidebar = () => {
   const pathname = usePathname();
-
+  const router = useRouter();
   const { user, logout } = useAuth();
   console.log("User in Sidebar:", user);
   const userName = user?.name || "Guest User";
   const userEmail = user?.email || "No email";
+  const [modalOpen, setModalOpen] = React.useState(false);
 
+  const handleOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
+  const handleMenuClick = (item: MenuItem) => {
+    if (item.id === "new-request") {
+      setModalOpen(true);
+    }
+    // For other items, navigation happens through the Link component
+  };
+
+  const handleSelectNew = () => {
+    setModalOpen(false);
+    router.push("/change-requests/new"); // ← Redirects to new change request page
+  };
+
+  const handleSelectExisting = () => {
+    setModalOpen(false);
+    router.push("/change-requests/existing"); // ← Redirects to existing document page
+  };
   // ✅ TypeScript Learning: Array with specific type
   const menuItems: MenuItem[] = [
     {
@@ -49,7 +70,7 @@ const Sidebar = () => {
     {
       id: "new-request",
       label: "New Change Request",
-      href: "/change-requests/new",
+      href: "#",
       icon: <Add />,
     },
     {
@@ -75,6 +96,10 @@ const Sidebar = () => {
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        position: "fixed", // ← Add this
+        top: 0, // ← Add this
+        left: 0, // ← Add this
+        zIndex: 1000, // ← Add this
       }}
     >
       {/* Header Section */}
@@ -120,6 +145,7 @@ const Sidebar = () => {
                 <ListItemButton
                   component={Link}
                   href={item.href}
+                  onClick={() => handleMenuClick(item)}
                   sx={{
                     borderRadius: 2,
                     py: 1.5,
@@ -231,6 +257,13 @@ const Sidebar = () => {
           </ListItemButton>
         </ListItem>
       </Box>
+
+      <ChangeRequestModal
+        open={modalOpen}
+        handleClose={() => setModalOpen(false)}
+        onSelectNew={handleSelectNew}
+        onSelectExisting={handleSelectExisting}
+      />
     </Box>
   );
 };
