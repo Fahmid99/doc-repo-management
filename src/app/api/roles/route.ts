@@ -6,19 +6,12 @@ export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization");
 
-    if (!authHeader) {
-      return NextResponse.json(
-        { error: "No authorization header" },
-        { status: 401 }
-      );
-    }
-
     const response = await fetch(
       `${BASE_URL}/organization/role?orgobjects=true`,
       {
         method: "GET",
         headers: {
-          Authorization: authHeader,
+          Authorization: authHeader!,
         },
       }
     );

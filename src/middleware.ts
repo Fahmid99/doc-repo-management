@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-console.log("MIDDLEWARE FILE LOADED"); // Add this line
+console.log("MIDDLEWARE FILE LOADED");
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -18,8 +18,8 @@ const authenticateUser = async (request: NextRequest) => {
   }
 };
 
-// Arrow function middleware
-export const middleware = async (request: NextRequest) => {
+// ✅ Function declaration instead of arrow function
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   console.log(`🛡️ MIDDLEWARE RUNNING for: ${pathname}`);
@@ -40,12 +40,19 @@ export const middleware = async (request: NextRequest) => {
     }
 
     console.log("✅ Auth success, setting headers");
-    // ... rest of your code
+    
+    // ✅ Add the header setting logic
+    const response = NextResponse.next();
+    response.headers.set("x-user-data", JSON.stringify(userData));
+    response.headers.set("x-user-roles", JSON.stringify(userData.effectiveroles || []));
+    response.headers.set("x-user-id", userData.id);
+    
+    return response;
   }
 
   console.log("🏁 Middleware complete");
   return NextResponse.next();
-};
+}
 
 export const config = {
   matcher: ["/api/:path*"],
