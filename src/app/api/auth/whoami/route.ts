@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ✅ Same whoami call as your login - just reuse the logic
-    const response = await fetch(`${BASE_URL}/organization/whoami`, {
+    const response = await fetch(`${BASE_URL}/organization/whoami?parents=false&ancestors=false&children=false&privileges=false&roles=true&views=false&acl=false&account=false`, {
       method: 'GET',
       headers: {
         'Authorization': authHeader

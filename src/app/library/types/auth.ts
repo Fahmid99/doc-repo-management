@@ -1,8 +1,11 @@
+import { Role } from "./role";
+
 export interface User {
   id?: string;
   username: string;
   name: string;
   email?: string;
+  roles: Role[]; 
 }
 
 export interface AuthContextType {

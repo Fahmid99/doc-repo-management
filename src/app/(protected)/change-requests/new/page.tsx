@@ -1,8 +1,15 @@
-import React from 'react';
-import NewChangeRequestForm from './components/ChangeRequestForm'
+import React from "react";
+import ChangeRequestForm from "./components/ChangeRequestForm";
+import PageHeader from "@/app/components/PageHeader";
+import { Box } from "@mui/material";
 
 const NewChangeRequestPage = () => {
-  return <NewChangeRequestForm />;
+  return (
+    <Box>
+      <PageHeader title="New Change Request" />
+      <ChangeRequestForm />
+    </Box>
+  );
 };
 
 export default NewChangeRequestPage;

@@ -34,6 +34,7 @@ export interface CatalogEntry {
 export interface ChangeRequestFormData {
   changeAuthority: string;
   changePriority: string;
+   changeRequestStatus: string;
   changeType: string;
   contributors: string;
   contributorsPrincipal: string;
