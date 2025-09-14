@@ -23,23 +23,20 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   console.log(`🛡️ MIDDLEWARE RUNNING for: ${pathname}`);
-  console.log(`⏰ Timestamp: ${new Date().toISOString()}`);
 
   if (pathname === "/api/auth/login") {
-    console.log("⏭️ Skipping login endpoint");
+ 
     return NextResponse.next();
   }
 
   if (pathname.startsWith("/api/")) {
-    console.log("🔍 Processing API route...");
+
     const userData = await authenticateUser(request);
     
     if (!userData) {
-      console.log("❌ Auth failed!");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log("✅ Auth success, setting headers");
     
     // ✅ Add the header setting logic
     const response = NextResponse.next();
@@ -50,7 +47,6 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  console.log("🏁 Middleware complete");
   return NextResponse.next();
 }
 
