@@ -1,6 +1,7 @@
 // src/app/library/types/changeRequest.ts
 
 export interface ChangeRequest {
+  id: string;
   changeAuthority: string;
   changePriority: CatalogEntry;
   changeRequestNumber: number;
@@ -34,7 +35,7 @@ export interface CatalogEntry {
 export interface ChangeRequestFormData {
   changeAuthority: string;
   changePriority: string;
-   changeRequestStatus: string;
+  changeRequestStatus: string;
   changeType: string;
   contributors: string;
   contributorsPrincipal: string;
