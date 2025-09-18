@@ -2,30 +2,42 @@
 
 export interface ChangeRequest {
   id: string;
-  changeAuthority: string;
-  changePriority: CatalogEntry;
-  changeRequestNumber: number;
-  changeRequestStatus: string;
-  changeType: CatalogEntry;
-  contributors: string;
-  contributorsPrincipal: string;
-  description: string;
-  dueDateComplete: Date;
-  identity: string;
-  participants: string[];
-  preapproved: boolean;
-  principleContributor: string;
-  reasonForChange: CatalogEntry;
-  reasonForChangeOther: string;
-  rejectionReason: CatalogEntry;
-  rejectionReasonComments: string;
-  relatedFolder: string;
-  releaseAuthority: string;
-  reviewers: string;
-  scopeOfChange: string;
+  created: {
+    on: string;
+    by: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  favourite?: boolean;
   title: string;
+  data: {
+    assignedto: string;
+    changeAuthority: string;
+    changePriority: CatalogEntry;
+    changeRequestNumber: number;
+    changeRequestStatus: string;
+    changeType: CatalogEntry;
+    contributors: string;
+    contributorsPrincipal: string;
+    description: string;
+    dueDateComplete: Date;
+    identity: string;
+    participants: string[];
+    preapproved: boolean;
+    principleContributor: string;
+    reasonForChange: CatalogEntry;
+    reasonForChangeOther: string;
+    rejectionReason: CatalogEntry;
+    rejectionReasonComments: string;
+    relatedFolder: string;
+    releaseAuthority: string;
+    reviewers: string;
+    scopeOfChange: string;
+    title: string;
+  };
 }
-
 export interface CatalogEntry {
   id: string;
   label: string;
@@ -33,6 +45,7 @@ export interface CatalogEntry {
 }
 
 export interface ChangeRequestFormData {
+  assignedTo: string;
   changeAuthority: string;
   changePriority: string;
   changeRequestStatus: string;

@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { useAuth } from "./AuthContext";
 import { useAuthCredentials } from "../hooks/useAuthCredentials";
-
+import { ChangeRequest } from "@/app/library/types/changeRequest";
 interface InboxResponse {
   success: boolean;
   requests: any[];
@@ -19,16 +19,16 @@ interface InboxResponse {
 
 interface InboxContextType {
   // Data
-  requests: any[];
+  requests: ChangeRequest[];
   totalCount: number;
-  selectedRequest: any | null;
+  selectedRequest: ChangeRequest | null;
   loading: boolean;
   error: string | null;
 
   // Actions
   fetchInbox: () => Promise<void>;
-  selectRequest: (request: any) => void;
-  updateRequest: (requestId: string, updates: any) => void;
+  selectRequest: (request: ChangeRequest) => void;
+  updateRequest: (requestId: string, updates: ChangeRequest) => void;
 }
 
 const InboxContext = createContext<InboxContextType | undefined>(undefined);
@@ -45,7 +45,9 @@ export const InboxProvider = ({ children }: InboxProviderProps) => {
   const [inboxData, setInboxData] = useState<InboxResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedRequest, setSelectedRequest] = useState<any | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<ChangeRequest | null>(
+    null
+  );
 
   // Function to fetch inbox data
   const fetchInbox = useCallback(async () => {
@@ -73,6 +75,7 @@ export const InboxProvider = ({ children }: InboxProviderProps) => {
       }
 
       const result = await response.json();
+      console.log(result);
       setInboxData(result);
     } catch (err: any) {
       setError(err.message);
@@ -82,13 +85,13 @@ export const InboxProvider = ({ children }: InboxProviderProps) => {
   }, []); // Empty dependency array to prevent infinite renders
 
   // Function to select a specific request
-  const selectRequest = useCallback((request: any) => {
+  const selectRequest = useCallback((request: ChangeRequest) => {
     console.log("InboxContext - selectRequest called with:", request);
     setSelectedRequest(request);
   }, []);
 
   // Function to update a specific request
-  const updateRequest = useCallback((requestId: string, updates: any) => {
+  const updateRequest = useCallback((requestId: string, updates: ChangeRequest) => {
     setInboxData((prev) => {
       if (!prev) return prev;
 
@@ -118,13 +121,15 @@ export const InboxProvider = ({ children }: InboxProviderProps) => {
   // Show loading while auth is loading
   if (authLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '18px'
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: "18px",
+        }}
+      >
         Loading authentication...
       </div>
     );

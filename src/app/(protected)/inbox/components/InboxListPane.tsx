@@ -24,6 +24,7 @@ import {
   FiberManualRecord,
 } from '@mui/icons-material';
 import { useInbox } from '@/app/contexts/InboxContext';
+import { request } from 'http';
 
 const InboxListPane = () => {
   const { requests, selectedRequest, selectRequest, loading, error } = useInbox();
@@ -102,7 +103,7 @@ const InboxListPane = () => {
           }}
         >
           <Typography variant="body2" sx={{ fontWeight: 500, color: '#1976d2', fontSize: '0.875rem' }}>
-            Activity
+          
           </Typography>
         </Box>
         <Box sx={{ px: 2, py: 1.5, cursor: 'pointer' }}>
@@ -176,7 +177,7 @@ const InboxListPane = () => {
                         <FiberManualRecord 
                           sx={{ 
                             fontSize: '0.5rem', 
-                            color: request.changeRequestStatus === 'In Development' ? '#ff9800' : '#4caf50'
+                            color: request.data.changeRequestStatus === 'In Development' ? '#ff9800' : '#4caf50'
                           }} 
                         />
                       </Box>
@@ -213,7 +214,7 @@ const InboxListPane = () => {
                               lineHeight: 1.3
                             }}
                           >
-                            {request.title || 'Company'}
+                            {request.data.title || 'Company'}
                           </Typography>
                           <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem', ml: 1 }}>
                             {formatDate(request.createdOn || request.dueDateComplete)}
@@ -238,7 +239,7 @@ const InboxListPane = () => {
                             mb: 0.25
                           }}
                         >
-                          {request.title || `Change Request #${request.changeRequestNumber || index + 1}`}
+                          {request.data.title || `Change Request #${request.changeRequestNumber || index + 1}`}
                         </Typography>
 
                         {/* Description */}

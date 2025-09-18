@@ -10,12 +10,10 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Divider,
   MenuItem,
   Select,
-  FormHelperText,
   FormControl,
-  InputLabel,
+  Stack,
 } from "@mui/material";
 import { useRoles } from "@/app/hooks/useRoles";
 import { useSubmitChangeRequest } from "@/app/hooks/useSubmitChangeRequest";
@@ -24,6 +22,7 @@ const ChangeRequestForm = () => {
   const { roles } = useRoles();
   const { submitChangeRequest } = useSubmitChangeRequest();
   const [formData, setFormData] = useState<ChangeRequestFormData>({
+    assignedTo: "",
     changeAuthority: "",
     changePriority: "",
     changeRequestStatus: "",
@@ -79,217 +78,293 @@ const ChangeRequestForm = () => {
       return acc;
     }, {} as Record<string, any>);
 
-    submissionData.changerequeststatus = "compliance authority review";
+    submissionData.assignedTo = "Compliance Authority";
     submitChangeRequest(submissionData);
     console.log("Form submitted:", submissionData);
-    // Add your submission logic here
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      mb={4}
-    >
+    <Box sx={{ p: 4, maxWidth: "90%", mx: "auto" }}>
       <Paper
-        elevation={3}
-        sx={{ width: "100%", maxWidth: 1000, boxShadow: "none" }}
+        elevation={0}
+        sx={{
+          p: 4,
+          borderRadius: 3,
+          backgroundColor: "white",
+          border: "1px solid #f0f0f0",
+        }}
       >
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          {/* Basic Information Section */}
-          <Typography variant="h6" sx={{ mb: 2, mt: 3, color: "primary.main" }}>
-            Basic Information
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid size={12}>
+        {/* Header */}
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+        >
+          Create new change request
+        </Typography>
+      
+        <Box component="form" onSubmit={handleSubmit}>
+          <Stack spacing={3}>
+            {/* Title */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Title
+              </Typography>
               <TextField
                 fullWidth
-                label="Title"
                 value={formData.title}
                 onChange={handleChange("title")}
-                helperText="Enter a descriptive title for the change request"
+                placeholder="Enter title"
                 variant="outlined"
-                required
+                size="medium"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  },
+                }}
               />
-            </Grid>
-            <Grid size={12}>
-              <TextField
-                fullWidth
-                label="Description"
-                value={formData.description}
-                onChange={handleChange("description")}
-                helperText="Provide a detailed description of the requested changes"
-                variant="outlined"
-                multiline
-                rows={4}
-                required
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Identity"
-                value={formData.identity}
-                onChange={handleChange("identity")}
-                helperText="Document or system identity"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Related Folder"
-                value={formData.relatedFolder}
-                onChange={handleChange("relatedFolder")}
-                helperText="Associated folder or location"
-                variant="outlined"
-              />
-            </Grid>
-          </Grid>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mt: 0.5,
+                }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  {formData.title.length}/100
+                </Typography>
+              </Box>
+            </Box>
 
-          <Divider sx={{ my: 4 }} />
-
-          {/* Change Details Section */}
-          <Typography variant="h6" sx={{ mb: 2, color: "primary.main" }}>
-            Change Details
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid size={6}>
+            {/* Description */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Description
+              </Typography>
               <TextField
                 fullWidth
-                label="Change Type"
-                value={formData.changeType}
-                onChange={handleChange("changeType")}
-                helperText="Type of change being requested"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Change Priority"
-                value={formData.changePriority}
-                onChange={handleChange("changePriority")}
-                helperText="Priority level of the change"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Reason for Change"
-                value={formData.reasonForChange}
-                onChange={handleChange("reasonForChange")}
-                helperText="Primary reason for requesting this change"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Other Reason"
-                value={formData.reasonForChangeOther}
-                onChange={handleChange("reasonForChangeOther")}
-                helperText="Additional details if 'Other' reason selected"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid size={12}>
-              <TextField
-                fullWidth
-                label="Scope of Change"
-                value={formData.scopeOfChange}
-                onChange={handleChange("scopeOfChange")}
-                helperText="Define the scope and boundaries of the change"
-                variant="outlined"
                 multiline
                 rows={3}
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Due Date"
-                type="date"
-                value={formData.dueDateComplete}
-                onChange={handleChange("dueDateComplete")}
-                helperText="Target completion date"
+                value={formData.description}
+                onChange={handleChange("description")}
+                placeholder="Enter Description"
                 variant="outlined"
-                InputLabelProps={{ shrink: true }}
+                size="medium"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  },
+                }}
               />
-            </Grid>
-            <Grid size={6}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={formData.preapproved}
-                    onChange={handleChange("preapproved")}
-                  />
-                }
-                label="Pre-approved Change"
-                sx={{ mt: 2 }}
-              />
-            </Grid>
-          </Grid>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mt: 0.5,
+                }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  {formData.description.length}/500
+                </Typography>
+              </Box>
+            </Box>
 
-          <Divider sx={{ my: 4 }} />
-
-          {/* People & Responsibilities Section */}
-          <Typography variant="h6" sx={{ mb: 2, color: "primary.main" }}>
-            People & Responsibilities
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid size={6}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Change Authority</InputLabel>
+            {/* Priority */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Priority
+              </Typography>
+              <FormControl fullWidth>
                 <Select
-                  value={formData.changeAuthority}
+                  value={formData.changePriority}
                   onChange={(event) =>
-                    handleChange("changeAuthority")(
+                    handleChange("changePriority")(
                       event as React.ChangeEvent<HTMLInputElement>
                     )
                   }
-                  label="Change Authority"
+                  displayEmpty
+                  size="medium"
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  }}
                 >
-                  {roles.map((role) => (
-                    <MenuItem key={role.id} value={role.name}>
-                      {role.name}
-                    </MenuItem>
-                  ))}
+                  <MenuItem value="">Select priority</MenuItem>
+                  <MenuItem value="High">High</MenuItem>
+                  <MenuItem value="Medium">Medium</MenuItem>
+                  <MenuItem value="Low">Low</MenuItem>
                 </Select>
-                <FormHelperText>
-                  Person with authority to approve changes
-                </FormHelperText>
               </FormControl>
-            </Grid>
-            <Grid size={6}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Release Authority</InputLabel>
+            </Box>
+
+            {/* Change Type */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Change Type
+              </Typography>
+              <FormControl fullWidth>
                 <Select
-                  value={formData.releaseAuthority}
+                  value={formData.changeType}
                   onChange={(event) =>
-                    handleChange("releaseAuthority")(
+                    handleChange("changeType")(
                       event as React.ChangeEvent<HTMLInputElement>
                     )
                   }
-                  label="Release Authority"
+                  displayEmpty
+                  size="medium"
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  }}
                 >
-                  {roles.map((role) => (
-                    <MenuItem key={role.id} value={role.name}>
-                      {role.name}
-                    </MenuItem>
-                  ))}
+                  <MenuItem value="">Select change type</MenuItem>
+                  <MenuItem value="Minor">Minor</MenuItem>
+                  <MenuItem value="Major">Major</MenuItem>
+                  <MenuItem value="Critical">Critical</MenuItem>
+                  <MenuItem value="Emergency">Emergency</MenuItem>
                 </Select>
-                <FormHelperText>
-                  Person with authority to release changes
-                </FormHelperText>
               </FormControl>
+            </Box>
+
+            {/* Date Fields */}
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+                >
+                  Start Date
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="date"
+                  value=""
+                  placeholder="Select start date"
+                  variant="outlined"
+                  size="medium"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      backgroundColor: "#f8f9fa",
+                      border: "1px solid #e9ecef",
+                      "& fieldset": {
+                        border: "none",
+                      },
+                      "&:hover": {
+                        backgroundColor: "#f1f3f4",
+                      },
+                      "&.Mui-focused": {
+                        backgroundColor: "white",
+                        border: "2px solid #1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+                >
+                  End date
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={formData.dueDateComplete}
+                  onChange={handleChange("dueDateComplete")}
+                  placeholder="Select end date"
+                  variant="outlined"
+                  size="medium"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      backgroundColor: "#f8f9fa",
+                      border: "1px solid #e9ecef",
+                      "& fieldset": {
+                        border: "none",
+                      },
+                      "&:hover": {
+                        backgroundColor: "#f1f3f4",
+                      },
+                      "&.Mui-focused": {
+                        backgroundColor: "white",
+                        border: "2px solid #1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid size={12}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Principle Contributer</InputLabel>
+
+            {/* Assignee */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Select assignee
+              </Typography>
+              <FormControl fullWidth>
                 <Select
                   value={formData.principleContributor}
                   onChange={(event) =>
@@ -297,57 +372,239 @@ const ChangeRequestForm = () => {
                       event as React.ChangeEvent<HTMLInputElement>
                     )
                   }
-                  label="Principle Contributer"
+                  displayEmpty
+                  size="medium"
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  }}
                 >
+                  <MenuItem value="">Select assignee</MenuItem>
                   {roles.map((role) => (
                     <MenuItem key={role.id} value={role.name}>
                       {role.name}
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>
-                  Main person responsible for implementing changes
-                </FormHelperText>
               </FormControl>
-            </Grid>
+            </Box>
 
-            <Grid size={12}>
+            {/* Change Authority */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Change Authority
+              </Typography>
+              <FormControl fullWidth>
+                <Select
+                  value={formData.changeAuthority}
+                  onChange={(event) =>
+                    handleChange("changeAuthority")(
+                      event as React.ChangeEvent<HTMLInputElement>
+                    )
+                  }
+                  displayEmpty
+                  size="medium"
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  }}
+                >
+                  <MenuItem value="">Select change authority</MenuItem>
+                  {roles.map((role) => (
+                    <MenuItem key={role.id} value={role.name}>
+                      {role.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Scope of Change */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Scope of Change
+              </Typography>
               <TextField
                 fullWidth
-                label="Contributors"
+                multiline
+                rows={3}
+                value={formData.scopeOfChange}
+                onChange={handleChange("scopeOfChange")}
+                placeholder="Define the scope and boundaries of the change"
+                variant="outlined"
+                size="medium"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  },
+                }}
+              />
+            </Box>
+
+            {/* Contributors */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Contributors
+              </Typography>
+              <TextField
+                fullWidth
                 value={formData.contributors}
                 onChange={handleChange("contributors")}
-                helperText="All people contributing to this change (comma-separated)"
+                placeholder="List contributors (comma-separated)"
                 variant="outlined"
-                multiline
-                rows={2}
+                size="medium"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  },
+                }}
               />
-            </Grid>
-            <Grid size={12}>
+            </Box>
+
+            {/* Reviewers */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Reviewers
+              </Typography>
               <TextField
                 fullWidth
-                label="Reviewers"
                 value={formData.reviewers}
                 onChange={handleChange("reviewers")}
-                helperText="People responsible for reviewing the changes (comma-separated)"
+                placeholder="List reviewers (comma-separated)"
                 variant="outlined"
-                multiline
-                rows={2}
+                size="medium"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    backgroundColor: "#f8f9fa",
+                    border: "1px solid #e9ecef",
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#f1f3f4",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                      border: "2px solid #1976d2",
+                    },
+                  },
+                }}
               />
-            </Grid>
-          </Grid>
+            </Box>
 
-          {/* Submit Button */}
-          <Box sx={{ mt: 4, textAlign: "center" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              sx={{ px: 6, py: 1.5 }}
-            >
-              Submit Change Request
-            </Button>
-          </Box>
+            {/* Pre-approved checkbox */}
+            <Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.preapproved}
+                    onChange={handleChange("preapproved")}
+                    sx={{ color: "#666" }}
+                  />
+                }
+                label={
+                  <Typography variant="body2" sx={{ color: "#333" }}>
+                    Pre-approved Change
+                  </Typography>
+                }
+              />
+            </Box>
+
+            {/* Submit Buttons */}
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
+              <Button
+                variant="outlined"
+                size="medium"
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  fontWeight: 500,
+                  px: 3,
+                  borderColor: "#ddd",
+                  color: "#666",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                size="medium"
+                onClick={handleSubmit}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  fontWeight: 500,
+                  px: 3,
+                  backgroundColor: "#1976d2",
+                  "&:hover": {
+                    backgroundColor: "#1976d2",
+                  },
+                }}
+              >
+                Create Change Request
+              </Button>
+            </Box>
+          </Stack>
         </Box>
       </Paper>
     </Box>
