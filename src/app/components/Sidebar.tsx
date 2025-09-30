@@ -67,9 +67,9 @@ const Sidebar = () => {
       href: "/inbox",
       icon: <Inbox />,
     },
-    {
+    { 
       id: "new-request",
-      label: "New Change Request",
+      label: "Create Change Request",
       href: "#",
       icon: <Add />,
     },

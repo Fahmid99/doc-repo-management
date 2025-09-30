@@ -14,12 +14,15 @@ import {
   Select,
   FormControl,
   Stack,
+  Autocomplete,
 } from "@mui/material";
 import { useRoles } from "@/app/hooks/useRoles";
 import { useSubmitChangeRequest } from "@/app/hooks/useSubmitChangeRequest";
+import { useDocuments } from "@/app/hooks/useDocuments";
 
 const ChangeRequestForm = () => {
   const { roles } = useRoles();
+  const { documents, loading } = useDocuments();
   const { submitChangeRequest } = useSubmitChangeRequest();
   const [formData, setFormData] = useState<ChangeRequestFormData>({
     assignedTo: "",
@@ -95,17 +98,52 @@ const ChangeRequestForm = () => {
         }}
       >
         {/* Header */}
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: 600, mb: 1, color: "#333" }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, color: "#333" }}>
           Create new change request
         </Typography>
-      
+
         <Box component="form" onSubmit={handleSubmit}>
           <Stack spacing={3}>
             {/* Title */}
-            <Box>
+          
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, mb: 1, color: "#333" }}
+              >
+                Select Document
+              </Typography>
+              <Autocomplete
+                disablePortal
+                disabled={loading}
+                loading={loading}
+                options={documents || []}
+                getOptionLabel={(option) => option.data.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder={
+                      loading ? "Loading documents..." : "Search documents..."
+                    }
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: 2,
+                        backgroundColor: "#f8f9fa",
+                        border: "1px solid #e9ecef",
+                        "& fieldset": {
+                          border: "none",
+                        },
+                        "&:hover": {
+                          backgroundColor: "#f1f3f4",
+                        },
+                        "&.Mui-focused": {
+                          backgroundColor: "white",
+                          border: "2px solid #1976d2",
+                        },
+                      },
+                    }}
+                  />
+                )}
+              />
               <Typography
                 variant="body2"
                 sx={{ fontWeight: 600, mb: 1, color: "#333" }}
@@ -148,7 +186,7 @@ const ChangeRequestForm = () => {
                   {formData.title.length}/100
                 </Typography>
               </Box>
-            </Box>
+            
 
             {/* Description */}
             <Box>
@@ -570,7 +608,14 @@ const ChangeRequestForm = () => {
             </Box>
 
             {/* Submit Buttons */}
-            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 2,
+                mt: 4,
+              }}
+            >
               <Button
                 variant="outlined"
                 size="medium"

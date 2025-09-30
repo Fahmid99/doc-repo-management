@@ -5,6 +5,7 @@ interface PageHeaderProps {
   title: string;
 }
 
+
 const PageHeader = ({ title }: PageHeaderProps) => {
   return (
     <Box sx={{ p: 6, width: "100%" }}>
@@ -15,4 +16,6 @@ const PageHeader = ({ title }: PageHeaderProps) => {
     </Box>
   );
 };
+
+
 export default PageHeader;

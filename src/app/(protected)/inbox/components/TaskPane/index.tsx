@@ -10,6 +10,7 @@ import TaskTabs from './TaskTabs';
 import OverviewTab from './OverviewTab';
 import DocumentDetailsTab from './DocumentDetailsTab';
 import ParticipantsTab from './ParticipantsTab';
+import ComplianceTask from './ComplianceTask';
 
 const TaskPane = () => {
   const { selectedRequest } = useInbox();
@@ -50,10 +51,12 @@ const TaskPane = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <OverviewTab selectedRequest={selectedRequest} />;
+        return <ComplianceTask selectedRequest={selectedRequest} />;
       case 1:
-        return <DocumentDetailsTab selectedRequest={selectedRequest} />;
+        return <OverviewTab selectedRequest={selectedRequest} />;
       case 2:
+        return <DocumentDetailsTab selectedRequest={selectedRequest} />;
+      case 3:
         return (
           <Box sx={{ p: 3 }}>
             <Typography variant="h6">Scope Document</Typography>
@@ -62,9 +65,9 @@ const TaskPane = () => {
             </Typography>
           </Box>
         );
-      case 3:
-        return <ParticipantsTab selectedRequest={selectedRequest} />;
       case 4:
+        return <ParticipantsTab selectedRequest={selectedRequest} />;
+      case 5:
         return (
           <Box sx={{ p: 3 }}>
             <Typography variant="h6">Workflow Status</Typography>
@@ -74,7 +77,7 @@ const TaskPane = () => {
           </Box>
         );
       default:
-        return <OverviewTab selectedRequest={selectedRequest} />;
+        return <ComplianceTask selectedRequest={selectedRequest} />;
     }
   };
 
