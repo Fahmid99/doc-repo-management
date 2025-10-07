@@ -66,3 +66,13 @@ export interface ChangeRequestFormData {
   scopeOfChange: string;
   title: string;
 }
+
+export interface DCREntryTabFormData{
+  scopeOfChange: string;
+  documents: CatalogEntry[];
+  newDocument: boolean;
+  Functionality: CatalogEntry;
+  Requestor: string;
+  requestorEmail: string;
+}
+
