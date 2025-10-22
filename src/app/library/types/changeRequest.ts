@@ -67,12 +67,15 @@ export interface ChangeRequestFormData {
   title: string;
 }
 
-export interface DCREntryTabFormData{
+export interface DCRFormData{
   scopeOfChange: string;
   documents: CatalogEntry[];
   newDocument: boolean;
   Functionality: CatalogEntry;
   Requestor: string;
   requestorEmail: string;
+  urgency: CatalogEntry;
+  releaseTime: Date | null;
+  draftDocumentName: string;
 }
 

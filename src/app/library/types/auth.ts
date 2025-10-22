@@ -5,7 +5,7 @@ export interface User {
   username: string;
   name: string;
   email?: string;
-  roles: Role[]; 
+  roles?: Role[]; 
 }
 
 export interface AuthContextType {

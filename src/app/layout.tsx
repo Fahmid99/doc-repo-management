@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from './contexts/AuthContext';
-
+import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./library/theme";
+import Providers from "./components/Providers";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,9 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>  {/* ✅ Wrap everything */}
-          {children}
-        </AuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

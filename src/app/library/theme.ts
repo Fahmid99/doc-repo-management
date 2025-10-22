@@ -41,8 +41,24 @@ const themeOptions: ThemeOptions = {
       },
     },
     MuiTextField: {
-      defaultProps: {
-        size: "small",
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            borderRadius: 8,
+            backgroundColor: "#f8f9fa",
+            border: "1px solid #e9ecef",
+            "& fieldset": {
+              border: "none",
+            },
+            "&:hover": {
+              backgroundColor: "#f1f3f4",
+            },
+            "&.Mui-focused": {
+              backgroundColor: "white",
+              border: "2px solid #1976d2",
+            },
+          },
+        },
       },
     },
     MuiTab: {
