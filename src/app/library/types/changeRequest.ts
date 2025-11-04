@@ -67,15 +67,24 @@ export interface ChangeRequestFormData {
   title: string;
 }
 
-export interface DCRFormData{
+export interface DCRFormData {
   scopeOfChange: string;
   documents: CatalogEntry[];
   newDocument: boolean;
-  Functionality: CatalogEntry;
-  Requestor: string;
+  functionality: CatalogEntry;
+  requestor: string;
   requestorEmail: string;
   urgency: CatalogEntry;
   releaseTime: Date | null;
   draftDocumentName: string;
+  releaseAuthority: string;
+  reviewers: CatalogEntry[];
+  author: CatalogEntry;
+  authorTimeFrame: Date | null;
+  reviewerTimeframe: Date | null;
+  contributors: CatalogEntry[];
+  contributorsTimeFrame: Date | null;
+  documentType: CatalogEntry;
+  documentReadRequirement: CatalogEntry;
+  reviewPeriod: CatalogEntry;
 }
-

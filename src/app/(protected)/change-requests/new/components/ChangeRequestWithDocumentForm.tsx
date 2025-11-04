@@ -61,7 +61,7 @@ const ChangeRequestWithDocumentForm = () => {
     reviewPeriod: { id: "", label: "", value: "" },
   });
 
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  // Removed uploadedFile state - not needed for JSON API
 
   // Pre-fill requestor info from auth
   useEffect(() => {
@@ -80,8 +80,8 @@ const ChangeRequestWithDocumentForm = () => {
 
   // Validation - only required fields from Entry tab
   const validateForm = (): string | null => {
-    if (!formData.scopeOfChange && !uploadedFile) {
-      return "Please provide scope of change or upload a file";
+    if (!formData.scopeOfChange) {
+      return "Please provide scope of change";
     }
     if (!formData.newDocument && formData.documents.length === 0) {
       return "Please select at least one document or mark as new document";
@@ -110,43 +110,17 @@ const ChangeRequestWithDocumentForm = () => {
         throw new Error(validationError);
       }
 
-      // Prepare submission data
-      const submissionData = new FormData();
-      
-      // Entry tab data
-      submissionData.append("scopeOfChange", formData.scopeOfChange);
-      submissionData.append("documents", JSON.stringify(formData.documents));
-      submissionData.append("newDocument", String(formData.newDocument));
-      submissionData.append("functionality", formData.functionality.value);
-      submissionData.append("requestor", formData.requestor);
-      submissionData.append("requestorEmail", formData.requestorEmail);
-      
-      // Details tab data (only if provided)
-      if (formData.urgency?.value) submissionData.append("urgency", formData.urgency.value);
-      if (formData.documentType?.value) submissionData.append("documentType", formData.documentType.value);
-      if (formData.draftDocumentName) submissionData.append("draftDocumentName", formData.draftDocumentName);
-      if (formData.releaseAuthority) submissionData.append("releaseAuthority", formData.releaseAuthority);
-      if (formData.author?.value) submissionData.append("author", formData.author.value);
-      if (formData.reviewers.length > 0) submissionData.append("reviewers", JSON.stringify(formData.reviewers));
-      if (formData.contributors.length > 0) submissionData.append("contributors", JSON.stringify(formData.contributors));
-      
-      // File upload
-      if (uploadedFile) {
-        submissionData.append("file", uploadedFile);
-      }
-
-      // Submit to API
       const authCredentials = localStorage.getItem("authCredentials");
-      const response = await fetch("/api/change-requests", {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${authCredentials}`,
-        },
-        body: submissionData,
-      });
 
-      if (!response.ok) {
-        throw new Error("Failed to submit change request");
+      // Determine how many change requests to create
+      if (formData.newDocument) {
+        // New document - create ONE change request
+        await createChangeRequest(null, authCredentials);
+      } else {
+        // Existing documents - create ONE change request PER document
+        for (const document of formData.documents) {
+          await createChangeRequest(document.id, authCredentials);
+        }
       }
 
       // Success!
@@ -174,8 +148,7 @@ const ChangeRequestWithDocumentForm = () => {
         documentReadRequirement: { id: "", label: "", value: "" },
         reviewPeriod: { id: "", label: "", value: "" },
       });
-      setUploadedFile(null);
-
+      
       // Reset to first tab
       setActiveTab(0);
 
@@ -186,6 +159,56 @@ const ChangeRequestWithDocumentForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Helper function to create a single change request
+  const createChangeRequest = async (
+    existingDocumentId: string | null,
+    authCredentials: string | null
+  ) => {
+    // Prepare the payload WITHOUT documents field
+    const payload = {
+      // Entry tab data
+      scopeOfChange: formData.scopeOfChange,
+      newDocument: formData.newDocument,
+      existingDocumentId: existingDocumentId, // The document this CR is for (null if new)
+      functionality: formData.functionality.value,
+      requestor: formData.requestor,
+      requestorEmail: formData.requestorEmail,
+      
+      // Details tab data (only if provided)
+      ...(formData.urgency?.value && { urgency: formData.urgency.value }),
+      ...(formData.documentType?.value && { documentType: formData.documentType.value }),
+      ...(formData.draftDocumentName && { draftDocumentName: formData.draftDocumentName }),
+      ...(formData.releaseAuthority && { releaseAuthority: formData.releaseAuthority }),
+      ...(formData.author?.value && { author: formData.author.value }),
+      ...(formData.reviewers.length > 0 && { reviewers: formData.reviewers }),
+      ...(formData.contributors.length > 0 && { contributors: formData.contributors }),
+      ...(formData.releaseTime && { releaseTime: formData.releaseTime }),
+      ...(formData.authorTimeFrame && { authorTimeFrame: formData.authorTimeFrame }),
+      ...(formData.reviewerTimeframe && { reviewerTimeframe: formData.reviewerTimeframe }),
+      ...(formData.contributorsTimeFrame && { contributorsTimeFrame: formData.contributorsTimeFrame }),
+      ...(formData.documentReadRequirement?.value && { 
+        documentReadRequirement: formData.documentReadRequirement.value 
+      }),
+      ...(formData.reviewPeriod?.value && { reviewPeriod: formData.reviewPeriod.value }),
+    };
+
+    const response = await fetch("/api/change-requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${authCredentials}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to submit change request");
+    }
+
+    return response.json();
   };
 
   const handleCancel = () => {
@@ -264,10 +287,6 @@ const ChangeRequestWithDocumentForm = () => {
           formData={formData}
           setFormData={setFormData}
           isSubmitting={isSubmitting}
-          uploadedFile={uploadedFile}
-          setUploadedFile={setUploadedFile}
-          error={error}
-          setError={setError}
         />
       </TabPanel>
 

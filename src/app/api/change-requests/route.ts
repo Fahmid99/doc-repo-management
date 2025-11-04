@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: data.error || "Failed to create change request" },
+        { error: "Failed to create change request" },
         { status: response.status }
       );
     }
@@ -41,6 +41,8 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
+
+    
   } catch (error) {
     console.error("Error creating change request:", error);
     return NextResponse.json(
